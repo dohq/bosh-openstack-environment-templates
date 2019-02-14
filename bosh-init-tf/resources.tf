@@ -14,7 +14,15 @@ resource "openstack_networking_secgroup_v2" "secgroup" {
   description = "BOSH Security Group"
 }
 
-resource "openstack_networking_secgroup_rule_v2" "secgroup_rule_4" {
+resource "openstack_networking_secgroup_rule_v2" "icmp" {
+  region = "${var.region_name}"
+  direction = "ingress"
+  ethertype = "IPv4"
+  protocol = "cimp"
+  security_group_id = "${openstack_networking_secgroup_v2.secgroup.id}"
+}
+
+resource "openstack_networking_secgroup_rule_v2" "ssh" {
   region = "${var.region_name}"
   direction = "ingress"
   ethertype = "IPv4"
@@ -25,7 +33,7 @@ resource "openstack_networking_secgroup_rule_v2" "secgroup_rule_4" {
   security_group_id = "${openstack_networking_secgroup_v2.secgroup.id}"
 }
 
-resource "openstack_networking_secgroup_rule_v2" "secgroup_rule_6" {
+resource "openstack_networking_secgroup_rule_v2" "bosh_agent" {
   region = "${var.region_name}"
   direction = "ingress"
   ethertype = "IPv4"
@@ -36,7 +44,7 @@ resource "openstack_networking_secgroup_rule_v2" "secgroup_rule_6" {
   security_group_id = "${openstack_networking_secgroup_v2.secgroup.id}"
 }
 
-resource "openstack_networking_secgroup_rule_v2" "secgroup_rule_5" {
+resource "openstack_networking_secgroup_rule_v2" "director" {
   region = "${var.region_name}"
   direction = "ingress"
   ethertype = "IPv4"
@@ -47,7 +55,7 @@ resource "openstack_networking_secgroup_rule_v2" "secgroup_rule_5" {
   security_group_id = "${openstack_networking_secgroup_v2.secgroup.id}"
 }
 
-resource "openstack_networking_secgroup_rule_v2" "secgroup_rule_1" {
+resource "openstack_networking_secgroup_rule_v2" "subnet_ingress" {
   region = "${var.region_name}"
   direction = "ingress"
   ethertype = "IPv4"
