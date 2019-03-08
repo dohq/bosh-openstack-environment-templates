@@ -18,7 +18,7 @@ resource "openstack_networking_secgroup_rule_v2" "icmp" {
   region = "${var.region_name}"
   direction = "ingress"
   ethertype = "IPv4"
-  protocol = "cimp"
+  protocol = "icmp"
   security_group_id = "${openstack_networking_secgroup_v2.secgroup.id}"
 }
 
@@ -60,7 +60,31 @@ resource "openstack_networking_secgroup_rule_v2" "subnet_ingress" {
   direction = "ingress"
   ethertype = "IPv4"
   protocol = "tcp"
-  remote_group_id = "${openstack_networking_secgroup_v2.secgroup.id}"
+  port_range_min = 1
+  port_range_max = 65535
+  remote_ip_prefix = "${openstack_networking_subnet_v2.bosh_subnet.cidr}"
+  security_group_id = "${openstack_networking_secgroup_v2.secgroup.id}"
+}
+
+resource "openstack_networking_secgroup_rule_v2" "credhub" {
+  region = "${var.region_name}"
+  direction = "ingress"
+  ethertype = "IPv4"
+  protocol = "tcp"
+  port_range_min = 8844
+  port_range_max = 8844
+  remote_ip_prefix = "0.0.0.0/0"
+  security_group_id = "${openstack_networking_secgroup_v2.secgroup.id}"
+}
+
+resource "openstack_networking_secgroup_rule_v2" "uaa" {
+  region = "${var.region_name}"
+  direction = "ingress"
+  ethertype = "IPv4"
+  protocol = "tcp"
+  port_range_min = 8443
+  port_range_max = 8443
+  remote_ip_prefix = "0.0.0.0/0"
   security_group_id = "${openstack_networking_secgroup_v2.secgroup.id}"
 }
 
